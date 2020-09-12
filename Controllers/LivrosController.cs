@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Biblioteca.AcessoDados;
+using Biblioteca.Models;
+using System;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using Biblioteca.AcessoDados;
-using Biblioteca.Models;
 
 namespace Biblioteca.Controllers
 {
@@ -21,9 +20,15 @@ namespace Biblioteca.Controllers
             return View();
         }
 
-        public PartialViewResult Listar(Livro livro, int pagina = 1, int registros = 5)
+        public JsonResult Listar(Livro livro, int current = 1, int rowCount = 5)
         {
+            string chave = Request.Form.AllKeys.Where(k => k.StartsWith("sort")).First();
+            string ordenacao = Request[chave];
+            string campo = chave.Replace("sort[", String.Empty).Replace("]", String.Empty);
+
             var livros = db.Livros.Include(l => l.Genero);
+
+            int total = livros.Count();
 
             if (!String.IsNullOrWhiteSpace(livro.Titulo))
             {
@@ -45,9 +50,17 @@ namespace Biblioteca.Controllers
                 livros = livros.Where(l => l.Valor == livro.Valor);
             }
 
-            var livrosPaginados = livros.OrderBy(l => l.Titulo).Skip((pagina - 1) * registros).Take(registros);
+            string campoOrdenacao = String.Format("{0} {1}", campo, ordenacao);
+            
+            var livrosPaginados = livros.OrderBy(campoOrdenacao).Skip((current - 1) * rowCount).Take(rowCount);
 
-            return PartialView("_Listar", livrosPaginados.ToList());
+            return Json(new {
+                        rows = livrosPaginados.ToList(), 
+                        current = current, 
+                        rowCount = rowCount,
+                        total = total
+            }
+                   , JsonRequestBehavior.AllowGet);
         }
 
         // GET: Livros/Details/5

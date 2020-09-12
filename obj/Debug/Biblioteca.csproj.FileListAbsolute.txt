@@ -88,3 +88,4 @@ C:\Users\perei\source\repos\Biblioteca\bin\EntityFramework.dll
 C:\Users\perei\source\repos\Biblioteca\bin\EntityFramework.SqlServer.dll
 C:\Users\perei\source\repos\Biblioteca\bin\EntityFramework.xml
 C:\Users\perei\source\repos\Biblioteca\bin\EntityFramework.SqlServer.xml
+C:\Users\perei\source\repos\Biblioteca\bin\System.Linq.Dynamic.dll

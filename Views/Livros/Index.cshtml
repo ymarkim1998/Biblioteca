@@ -11,59 +11,33 @@
     </a>
 </p>
 
-<form class="form-inline">
-    <div class="form-group">
-        <label class="sr-only">Título</label>
-        <input type="text" class="form-control" name="Titulo" placeholder="Título" />
-    </div>
-    <div class="form-group">
-        <label class="sr-only">Autor</label>
-        <input type="text" class="form-control" name="Autor" placeholder="Autor" />
-    </div>
-    <div class="form-group">
-        <label class="sr-only">Ano da Edição</label>
-        <input type="text" class="form-control" name="AnoEdicao" placeholder="Ano da Edição" />
-    </div>
-    <div class="form-group">
-        <label class="sr-only">Valor</label>
-        <input type="text" class="form-control" name="Valor" placeholder="Valor" />
-    </div>
-    <button type="button" id="btnFiltrar" class="btn btn-success">Filtrar</button>
-
-    <input type="hidden" name="pagina" value="1" />
-    <input type="hidden" name="registros" value="5" />
-</form>
-
-<div id="listagemDeLivros"></div>
+<table id="gridDados">
+    <thead>
+        <tr>
+            <th data-column-id="Titulo" data-order="asc">Título</th>
+            <th data-column-id="Autor">Autor</th>
+            <th data-column-id="AnoEdicao">Ano da Edição</th>
+            <th data-column-id="Valor">Valor</th>
+        </tr>
+    </thead>
+</table>
 
 @section scripts {
-    
+
+    <script src="~/Scripts/jquery.bootgrid.js"></script>
     <script type="text/javascript">
 
         $(document).ready(configurarControles);
 
         function configurarControles() {
-
-            $("#btnFiltrar").click(listarLivros);
-
-            listarLivros();
-        }
-
-        function paginar(valor) {
-
-            var elementoPagina = $("input[name='pagina']");
-
-            var paginaAtual = parseInt(elementoPagina.val());
-
-            elementoPagina.val(paginaAtual + valor);
-
-            listarLivros();
-        }
-
-        function listarLivros() {
-            $("#listagemDeLivros").load("@Url.Action("Listar")", $("form").serialize());
+            $("#gridDados").bootgrid(
+                {
+                    ajax: true,
+                    url: "@Url.Action("Listar")"
+                }
+            );
         }
 
     </script>
-    
+
 }

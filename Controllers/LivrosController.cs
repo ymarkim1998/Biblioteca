@@ -20,34 +20,27 @@ namespace Biblioteca.Controllers
             return View();
         }
 
-        public JsonResult Listar(Livro livro, int current = 1, int rowCount = 5)
+        public JsonResult Listar(Livro livro, string searchPhrase ,int current = 1, int rowCount = 5)
         {
             string chave = Request.Form.AllKeys.Where(k => k.StartsWith("sort")).First();
+
             string ordenacao = Request[chave];
+
             string campo = chave.Replace("sort[", String.Empty).Replace("]", String.Empty);
 
             var livros = db.Livros.Include(l => l.Genero);
 
             int total = livros.Count();
 
-            if (!String.IsNullOrWhiteSpace(livro.Titulo))
+            if (!String.IsNullOrWhiteSpace(searchPhrase))
             {
-                livros = livros.Where(l => l.Titulo.Contains(livro.Titulo));
-            }
+                int ano = 0;
+                int.TryParse(searchPhrase, out ano);
 
-            if (!String.IsNullOrWhiteSpace(livro.Autor))
-            {
-                livros = livros.Where(l => l.Autor.Contains(livro.Autor));
-            }
+                decimal valor = 0;
+                decimal.TryParse(searchPhrase, out valor);
 
-            if (livro.AnoEdicao != 0)
-            {
-                livros = livros.Where(l => l.AnoEdicao == livro.AnoEdicao);
-            }
-
-            if (livro.Valor != decimal.Zero)
-            {
-                livros = livros.Where(l => l.Valor == livro.Valor);
+                livros = livros.Where("Titulo.Contains(@0) OR Autor.Contains(@0) OR AnoEdicao == @1 OR Valor == @2 ", searchPhrase, ano, valor);
             }
 
             string campoOrdenacao = String.Format("{0} {1}", campo, ordenacao);

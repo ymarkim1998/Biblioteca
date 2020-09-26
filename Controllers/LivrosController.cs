@@ -68,14 +68,14 @@ namespace Biblioteca.Controllers
             {
                 return HttpNotFound();
             }
-            return View(livro);
+            return PartialView(livro);
         }
 
         // GET: Livros/Create
         public ActionResult Create()
         {
             ViewBag.GeneroId = new SelectList(db.Generos, "Id", "Nome");
-            return View();
+            return PartialView();
         }
 
         // POST: Livros/Create
@@ -93,7 +93,7 @@ namespace Biblioteca.Controllers
             }
 
             ViewBag.GeneroId = new SelectList(db.Generos, "Id", "Nome", livro.GeneroId);
-            return View(livro);
+            return PartialView(livro);
         }
 
         // GET: Livros/Edit/5
@@ -109,7 +109,7 @@ namespace Biblioteca.Controllers
                 return HttpNotFound();
             }
             ViewBag.GeneroId = new SelectList(db.Generos, "Id", "Nome", livro.GeneroId);
-            return View(livro);
+            return PartialView(livro);
         }
 
         // POST: Livros/Edit/5
@@ -126,7 +126,7 @@ namespace Biblioteca.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.GeneroId = new SelectList(db.Generos, "Id", "Nome", livro.GeneroId);
-            return View(livro);
+            return PartialView(livro);
         }
 
         // GET: Livros/Delete/5
@@ -141,7 +141,7 @@ namespace Biblioteca.Controllers
             {
                 return HttpNotFound();
             }
-            return View(livro);
+            return PartialView(livro);
         }
 
         // POST: Livros/Delete/5
